@@ -28,6 +28,7 @@ const Contact = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false); // <-- nuevo estado
 
   const handleInputChange = (e) => {
     setFormData({
@@ -37,42 +38,59 @@ const Contact = () => {
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Configura los parámetros que envías a tu template
-  const templateParams = {
-    name: formData.name,
-    email: formData.email,
-    phone: formData.phone,
-    service: formData.service,
-    message: formData.message
+    if (isSending) return; // Evita envíos múltiples
+    setIsSending(true);
+
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      service: formData.service,
+      message: formData.message
+    };
+
+    emailjs.send(
+      'service_7o8c1uz',
+      'template_6dcz5t7',
+      templateParams,
+      'h8mqwqjiWvQg8oBk_'
+    )
+    .then((response) => {
+      console.log('Correo enviado!', response.status, response.text);
+      setIsSubmitted(true);
+      setIsSending(false); // <-- reactivar el botón
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: ''
+        });
+      }, 3000);
+    })
+    .catch((err) => {
+      console.error('Error al enviar correo:', err);
+      alert('Ocurrió un error al enviar el mensaje. Intenta nuevamente.');
+      setIsSending(false); // <-- reactivar el botón si falla
+    });
   };
 
-  
-  emailjs.send(
-    'service_7o8c1uz',   
-    'template_6dcz5t7',  
-    templateParams,
-    'h8mqwqjiWvQg8oBk_'    
-  )
-  .then((response) => {
-    console.log('Correo enviado!', response.status, response.text);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        service: '',
-        message: ''
-      });
-    }, 3000);
-  })
-  .catch((err) => {
-    console.error('Error al enviar correo:', err);
-    alert('Ocurrió un error al enviar el mensaje. Intenta nuevamente.');
-  });
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* ... tus inputs ... */}
+      <button
+        type="submit"
+        disabled={isSending} // <-- deshabilitado mientras envía
+        className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+      >
+        {isSending ? 'Enviando...' : 'Enviar Mensaje'}
+      </button>
+    </form>
+  );
 };
 
   const contactInfo = [
@@ -293,14 +311,17 @@ const Contact = () => {
                   </div>
 
                   <motion.button
-                    type="submit"
-                    className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Enviar Mensaje
-                    <Send className="w-5 h-5" />
-                  </motion.button>
+  type="submit"
+  disabled={isSending} // <-- deshabilita el botón mientras envía
+  className={`w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-3
+    ${isSending ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}`}
+  whileHover={isSending ? {} : { scale: 1.02, y: -2 }} // evita hover mientras envía
+  whileTap={isSending ? {} : { scale: 0.98 }}
+>
+  {isSending ? 'Enviando...' : 'Enviar Mensaje'}  {/* cambia el texto */}
+  <Send className="w-5 h-5" />
+</motion.button>
+
                 </form>
               ) : (
                 <motion.div
@@ -326,6 +347,6 @@ const Contact = () => {
       </div>
     </section>
   );
-};
+
 
 export default Contact;
