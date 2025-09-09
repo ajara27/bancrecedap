@@ -9,14 +9,9 @@ import {
   Send,
   CheckCircle,
   Facebook,
-  Twitter,
   Linkedin,
   Instagram
 } from 'lucide-react';
-
-
-
-
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +23,7 @@ const Contact = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSending, setIsSending] = useState(false); // <-- nuevo estado
+  const [isSending, setIsSending] = useState(false); // Para desactivar botón mientras se envía
 
   const handleInputChange = (e) => {
     setFormData({
@@ -40,7 +35,7 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isSending) return; // Evita envíos múltiples
+    if(isSending) return; // evita envíos duplicados si se da click varias veces
     setIsSending(true);
 
     const templateParams = {
@@ -52,15 +47,15 @@ const Contact = () => {
     };
 
     emailjs.send(
-      'service_7o8c1uz',
-      'template_6dcz5t7',
+      'service_7o8c1uz',   
+      'template_6dcz5t7',  
       templateParams,
-      'h8mqwqjiWvQg8oBk_'
+      'h8mqwqjiWvQg8oBk_'    
     )
     .then((response) => {
       console.log('Correo enviado!', response.status, response.text);
       setIsSubmitted(true);
-      setIsSending(false); // <-- reactivar el botón
+      setIsSending(false);
       setTimeout(() => {
         setIsSubmitted(false);
         setFormData({
@@ -75,23 +70,9 @@ const Contact = () => {
     .catch((err) => {
       console.error('Error al enviar correo:', err);
       alert('Ocurrió un error al enviar el mensaje. Intenta nuevamente.');
-      setIsSending(false); // <-- reactivar el botón si falla
+      setIsSending(false);
     });
   };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* ... tus inputs ... */}
-      <button
-        type="submit"
-        disabled={isSending} // <-- deshabilitado mientras envía
-        className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
-      >
-        {isSending ? 'Enviando...' : 'Enviar Mensaje'}
-      </button>
-    </form>
-  );
-};
 
   const contactInfo = [
     {
@@ -232,9 +213,7 @@ const Contact = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">
-                        Nombre Completo *
-                      </label>
+                      <label className="block text-gray-700 font-semibold mb-2">Nombre Completo *</label>
                       <input
                         type="text"
                         name="name"
@@ -246,9 +225,7 @@ const Contact = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">
-                        Email *
-                      </label>
+                      <label className="block text-gray-700 font-semibold mb-2">Email *</label>
                       <input
                         type="email"
                         name="email"
@@ -263,9 +240,7 @@ const Contact = () => {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">
-                        Teléfono
-                      </label>
+                      <label className="block text-gray-700 font-semibold mb-2">Teléfono</label>
                       <input
                         type="tel"
                         name="phone"
@@ -276,9 +251,7 @@ const Contact = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">
-                        Servicio de Interés
-                      </label>
+                      <label className="block text-gray-700 font-semibold mb-2">Servicio de Interés</label>
                       <select
                         name="service"
                         value={formData.service}
@@ -287,18 +260,14 @@ const Contact = () => {
                       >
                         <option value="">Selecciona un servicio</option>
                         {services.map((service) => (
-                          <option key={service} value={service}>
-                            {service}
-                          </option>
+                          <option key={service} value={service}>{service}</option>
                         ))}
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
-                      Mensaje *
-                    </label>
+                    <label className="block text-gray-700 font-semibold mb-2">Mensaje *</label>
                     <textarea
                       name="message"
                       value={formData.message}
@@ -311,17 +280,15 @@ const Contact = () => {
                   </div>
 
                   <motion.button
-  type="submit"
-  disabled={isSending} // <-- deshabilita el botón mientras envía
-  className={`w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-3
-    ${isSending ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}`}
-  whileHover={isSending ? {} : { scale: 1.02, y: -2 }} // evita hover mientras envía
-  whileTap={isSending ? {} : { scale: 0.98 }}
->
-  {isSending ? 'Enviando...' : 'Enviar Mensaje'}  {/* cambia el texto */}
-  <Send className="w-5 h-5" />
-</motion.button>
-
+                    type="submit"
+                    disabled={isSending} // desactiva botón mientras envía
+                    className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Enviar Mensaje
+                    <Send className="w-5 h-5" />
+                  </motion.button>
                 </form>
               ) : (
                 <motion.div
@@ -347,6 +314,6 @@ const Contact = () => {
       </div>
     </section>
   );
-
+};
 
 export default Contact;

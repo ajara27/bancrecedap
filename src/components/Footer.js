@@ -72,7 +72,7 @@ const Footer = () => {
                     </div>
                 <div>
                   <h3 className="text-2xl font-bold">Bancrece</h3>
-                  <p className="text-green-300 text-sm">Asesoría & Servicios SPA</p>
+                  <p className="text-green-300 text-sm">Asesoría & Servicios </p>
                 </div>
               </div>
               

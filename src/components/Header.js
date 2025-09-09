@@ -34,9 +34,7 @@ const Header = () => {
               <h1 className="text-2xl font-bold text-white tracking-wide">
                 Bancrece
               </h1>
-              <p className="text-xs text-green-400 font-medium">
-                Asesoría & Servicios SPA
-              </p>
+             <p className="text-2xl font-bold text-white tracking-wide">Asesoría & Servicios </p>
             </div>
           </motion.div>
 
