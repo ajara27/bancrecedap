@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, TrendingUp, Phone, Mail } from 'lucide-react';
-import Logo from '../assets/logo1.png'
+import { Menu, X, Phone, Mail } from 'lucide-react';
+import Logo from '../assets/logo1.png';
+import { HashLink } from 'react-router-hash-link';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { name: 'Inicio', href: '#inicio' },
-    { name: 'Servicios', href: '#servicios' },
-    { name: 'Nosotros', href: '#nosotros' },
-    { name: 'Contacto', href: '#contacto' }
+    { name: 'Inicio', to: '/#inicio' },
+    { name: 'Servicios', to: '/#servicios' },
+    { name: 'Nosotros', to: '/#nosotros' },
+    { name: 'Contacto', to: '/#contacto' },
+    { name: 'Canal de Denuncias', to: '/portal-denuncias' }
   ];
 
   return (
@@ -28,30 +30,31 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
           >
             <div className="p-1 rounded-full bg-white shadow-md">
-           <img src={Logo} alt="Bancrece Logo" className="w-10 h-10 object-contain" />
+              <img src={Logo} alt="Bancrece Logo" className="w-10 h-10 object-contain" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-wide">
-                Bancrece
-              </h1>
-             <p className="text-2xl font-bold text-white tracking-wide">Asesoría & Servicios </p>
+              <h1 className="text-2xl font-bold text-white tracking-wide">Bancrece</h1>
+              <p className="text-2xl font-bold text-white tracking-wide">Asesoría & Servicios</p>
             </div>
           </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item, index) => (
-              <motion.a
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className="px-3 py-2 rounded-xl text-white hover:text-green-400 transition-colors duration-300"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 + 0.3 }}
-                whileHover={{ scale: 1.05 }}
               >
-                {item.name}
-              </motion.a>
+                <HashLink
+                  smooth
+                  to={item.to}
+                  className="px-3 py-2 rounded-xl text-white hover:text-green-400 transition-colors duration-300"
+                >
+                  {item.name}
+                </HashLink>
+              </motion.div>
             ))}
           </nav>
 
@@ -89,14 +92,15 @@ const Header = () => {
         >
           <div className="py-4 space-y-4 border-t border-green-700">
             {navItems.map((item) => (
-              <a
+              <HashLink
                 key={item.name}
-                href={item.href}
+                smooth
+                to={item.to}
                 className="block px-4 py-2 rounded-lg text-white hover:bg-green-600/20 font-medium transition-colors duration-300"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
-              </a>
+              </HashLink>
             ))}
             <div className="pt-4 space-y-2 border-t border-green-700">
               <div className="flex items-center gap-2 text-sm text-white bg-green-600 px-3 py-2 rounded-lg shadow">
